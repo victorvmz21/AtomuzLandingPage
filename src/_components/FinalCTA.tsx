@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, Users, BarChart3, Rocket, Mail, MessageSquare, Phone } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  Users,
+  BarChart3,
+  Rocket,
+  Mail,
+  MessageSquare,
+  Phone,
+} from "lucide-react";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
@@ -12,11 +21,15 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function FinalCTA() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("loading");
+    setErrorMsg("");
 
     const formData = new FormData(e.currentTarget);
     const body = {
@@ -27,18 +40,23 @@ export default function FinalCTA() {
     };
 
     try {
-      const res = await fetch("/api/send-email", {
+      const res = await fetch("/api/send-mail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) throw new Error("Failed to send");
+      const json = await res.json();
 
+      if (!res.ok) {
+        throw new Error(json.error || "Failed to send");
+      }
+
+      // ✅ Show success message
       setStatus("success");
-      e.currentTarget.reset();
     } catch (err) {
-        console.log(err)
+      console.error("❌ Form submission error:", err);
+      setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
   };
@@ -53,9 +71,13 @@ export default function FinalCTA() {
             className="text-3xl md:text-5xl font-extrabold text-navy flex items-center justify-center gap-3"
           >
             <Rocket className="text-neon animate-bounce" size={36} />
-            Ready to launch something you <span className="text-neon">love</span>?
+            Ready to launch something you <span className="text-neon">love</span>
+            ?
           </motion.h2>
-          <motion.p {...fadeUp(0.05)} className="mt-4 text-navy/70 max-w-2xl mx-auto text-lg">
+          <motion.p
+            {...fadeUp(0.05)}
+            className="mt-4 text-navy/70 max-w-2xl mx-auto text-lg"
+          >
             Tell us about your product. Our senior team will reply with a clear
             plan and roadmap tailored to your vision.
           </motion.p>
@@ -111,6 +133,7 @@ export default function FinalCTA() {
             />
           </div>
 
+          {/* Message */}
           <div className="relative flex items-start mt-6">
             <span className="absolute left-4 top-4 text-navy/40">
               <MessageSquare size={20} />
@@ -148,13 +171,21 @@ export default function FinalCTA() {
 
           {/* Success / Error Message */}
           {status === "success" && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 text-green-600 font-semibold">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 text-green-600 font-semibold"
+            >
               ✅ Message sent successfully!
             </motion.p>
           )}
           {status === "error" && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 text-red-600 font-semibold">
-              ❌ Failed to send. Please try again later.
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 text-red-600 font-semibold"
+            >
+              ❌ {errorMsg || "Failed to send. Please try again later."}
             </motion.p>
           )}
         </motion.form>
@@ -171,7 +202,8 @@ export default function FinalCTA() {
             <Users size={14} className="text-neon" /> Senior team
           </div>
           <div className="flex items-center gap-2">
-            <BarChart3 size={14} className="text-neon" /> Clear milestones & demos
+            <BarChart3 size={14} className="text-neon" /> Clear milestones &
+            demos
           </div>
         </motion.div>
       </div>
