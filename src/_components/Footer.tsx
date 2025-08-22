@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Instagram, Mail, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
 
@@ -13,7 +13,7 @@ export default function Footer() {
           <h3 className="text-lg font-bold">Atomuz Development</h3>
           <p className="mt-3 text-white/70 text-sm leading-relaxed">
             We design & build high-performing SaaS products and mobile apps 
-            for startups and enterprise teams. 🚀
+            for startups and enterprise teams.
           </p>
         </div>
 

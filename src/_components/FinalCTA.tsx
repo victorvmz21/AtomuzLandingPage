@@ -38,6 +38,7 @@ export default function FinalCTA() {
       setStatus("success");
       e.currentTarget.reset();
     } catch (err) {
+        console.log(err)
       setStatus("error");
     }
   };
@@ -52,7 +53,7 @@ export default function FinalCTA() {
             className="text-3xl md:text-5xl font-extrabold text-navy flex items-center justify-center gap-3"
           >
             <Rocket className="text-neon animate-bounce" size={36} />
-            Ready to launch something <span className="text-neon">love</span>?
+            Ready to launch something you <span className="text-neon">love</span>?
           </motion.h2>
           <motion.p {...fadeUp(0.05)} className="mt-4 text-navy/70 max-w-2xl mx-auto text-lg">
             Tell us about your product. Our senior team will reply with a clear
