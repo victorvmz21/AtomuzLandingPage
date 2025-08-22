@@ -24,8 +24,9 @@ export async function POST(req: Request) {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
-      from: "Atomuz Form <hello@noreply.atomuz.com>", // use verified domain
-      to: ["victor.monteiro21@icloud.com"],
+      from: "Atomuz Form <noreply@noreply.atomuz.com>", // use verified domain
+      to: ["atomuz.development@gmail.com"],
+      replyTo: email,
       subject: `New contact form from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
     });
